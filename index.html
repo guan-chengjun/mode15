@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="旋转咖啡杯机械仿真科普平台 —— 基于 Three.js 的机械传动教学仿真" />
+    <title>旋转咖啡杯机械仿真科普平台</title>
+  </head>
+  <body>
+    <!-- 3D 渲染画布挂载点 -->
+    <div id="app">
+      <canvas id="three-canvas"></canvas>
+      <!-- CSS2D 空间标签层（3D 标签随模型一起变换） -->
+      <div id="label-layer"></div>
+    </div>
+
+    <!-- 启动加载遮罩：模型远程加载进度 -->
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="loading-box">
+        <div class="loading-spinner"></div>
+        <h2>旋转咖啡杯机械仿真</h2>
+        <p id="loading-text">正在初始化渲染引擎…</p>
+        <div class="loading-progress-track">
+          <div id="loading-progress" class="loading-progress-bar"></div>
+        </div>
+        <p id="loading-hint" class="loading-hint"></p>
+      </div>
+    </div>
+
+    <!-- 顶部工具条 -->
+    <header id="toolbar" class="toolbar hidden">
+      <div class="toolbar-title">☕ 旋转咖啡杯机械仿真科普平台</div>
+      <div class="toolbar-buttons">
+        <button id="btn-play" class="tool-btn" title="运行 / 暂停仿真（空格键）">▶ 运行</button>
+        <button id="btn-step" class="tool-btn" title="单步推进一个固定时间步">⏭ 单步</button>
+        <button id="btn-reset" class="tool-btn" title="复位全部机构">⟲ 复位</button>
+        <button id="btn-screenshot" class="tool-btn" title="保存当前画面截图">📷 截图</button>
+      </div>
+    </header>
+
+    <!-- 左侧：部件树面板 -->
+    <aside id="tree-panel" class="side-panel left-panel hidden">
+      <div class="panel-header">
+        <span>部件清单</span>
+        <input id="tree-search" type="text" placeholder="搜索部件…" class="tree-search" />
+      </div>
+      <div id="tree-root" class="tree-root"></div>
+    </aside>
+
+    <!-- 右侧：实时数据面板 -->
+    <aside id="data-panel" class="side-panel right-panel hidden">
+      <div class="panel-header"><span>实时仿真数据</span></div>
+      <div id="data-root" class="data-root"></div>
+      <div class="panel-header second"><span>仿真日志</span></div>
+      <div id="log-root" class="log-root"></div>
+      <div class="data-actions">
+        <button id="btn-export-log" class="tool-btn small">导出日志 CSV</button>
+        <button id="btn-clear-log" class="tool-btn small">清空日志</button>
+      </div>
+    </aside>
+
+    <!-- 底部状态栏：性能与降级提示 -->
+    <footer id="status-bar" class="status-bar hidden">
+      <span id="status-fps">FPS: --</span>
+      <span id="status-draw">DrawCalls: --</span>
+          <span id="status-triangles">三角面: --</span>
+      <span id="status-quality">画质: 高</span>
+      <span id="status-mode">模式: 实体</span>
+    </footer>
+
+    <!-- 部件科普信息弹窗 -->
+    <div id="info-modal" class="info-modal hidden">
+      <div class="info-modal-mask"></div>
+      <div class="info-modal-box">
+        <button id="info-close" class="info-close" title="关闭">✕</button>
+        <h2 id="info-title"></h2>
+        <div class="info-tags" id="info-tags"></div>
+        <section>
+          <h3>📘 工作原理</h3>
+          <p id="info-principle"></p>
+        </section>
+        <section>
+          <h3>🔧 结构说明</h3>
+          <p id="info-structure"></p>
+        </section>
+        <section>
+          <h3>⚠ 常见故障与维护</h3>
+          <ul id="info-maintenance"></ul>
+        </section>
+        <section id="info-params-section">
+          <h3>📐 运行参数</h3>
+          <div id="info-params" class="info-params"></div>
+        </section>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

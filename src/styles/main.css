@@ -1,0 +1,549 @@
+/* =============================================================
+ * 旋转咖啡杯机械仿真 —— 全局样式
+ * 深色工程教学主题；纯 CSS，无 UI 框架依赖
+ * ============================================================= */
+
+:root {
+  --bg-deep: #0d1117;
+  --bg-panel: rgba(22, 28, 38, 0.92);
+  --bg-panel-solid: #161c26;
+  --bg-input: #0f151e;
+  --border: #2a3547;
+  --border-active: #4aa8ff;
+  --text-main: #dce4ef;
+  --text-dim: #8b98a9;
+  --accent: #4aa8ff;
+  --accent-warm: #ffb454;
+  --danger: #ff6b6b;
+  --ok: #46d18d;
+  --shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  --font-mono: 'Cascadia Code', 'JetBrains Mono', Consolas, 'Courier New', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-deep);
+  color: var(--text-main);
+  font-family: 'Microsoft YaHei', 'PingFang SC', 'Segoe UI', sans-serif;
+  font-size: 14px;
+  user-select: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ---------- 3D 画布与标签层 ---------- */
+#app,
+#three-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#three-canvas {
+  touch-action: none;
+}
+
+#label-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* CSS2D 空间标签样式 */
+.spatial-label {
+  pointer-events: auto;
+  padding: 3px 10px;
+  background: rgba(13, 17, 23, 0.82);
+  border: 1px solid var(--border-active);
+  border-radius: 12px;
+  color: #cfe6ff;
+  font-size: 12px;
+  white-space: nowrap;
+  transform: translateY(-4px);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.spatial-label:hover {
+  background: rgba(74, 168, 255, 0.35);
+}
+.spatial-label.dim {
+  opacity: 0.45;
+}
+
+/* ---------- 加载遮罩 ---------- */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 40%, #182232, #0d1117);
+}
+.loading-box {
+  width: min(440px, 86vw);
+  text-align: center;
+}
+.loading-box h2 {
+  margin: 18px 0 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+.loading-box p {
+  color: var(--text-dim);
+  font-size: 13px;
+}
+.loading-spinner {
+  width: 54px;
+  height: 54px;
+  margin: 0 auto;
+  border: 4px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.loading-progress-track {
+  margin: 16px 0 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--bg-input);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.loading-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), #7dd0ff);
+  border-radius: 4px;
+  transition: width 0.25s ease;
+}
+.loading-hint {
+  min-height: 18px;
+  font-size: 12px;
+}
+
+/* ---------- 顶部工具条 ---------- */
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+}
+.toolbar-title {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+.toolbar-buttons {
+  display: flex;
+  gap: 8px;
+}
+.tool-btn {
+  padding: 6px 14px;
+  background: var(--bg-input);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+.tool-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.tool-btn.active {
+  background: rgba(74, 168, 255, 0.18);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.tool-btn.small {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+/* ---------- 侧边面板通用 ---------- */
+.side-panel {
+  position: fixed;
+  top: 64px;
+  bottom: 38px;
+  width: 290px;
+  z-index: 15;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.left-panel {
+  left: 14px;
+}
+.right-panel {
+  right: 14px;
+  width: 310px;
+}
+.panel-header {
+  padding: 10px 14px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.panel-header.second {
+  border-top: 1px solid var(--border);
+}
+.tree-search {
+  width: 130px;
+  padding: 4px 8px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text-main);
+  font-size: 12px;
+  outline: none;
+}
+.tree-search:focus {
+  border-color: var(--accent);
+}
+
+/* ---------- 部件树 ---------- */
+.tree-root {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+.tree-node {
+  margin-bottom: 2px;
+}
+.tree-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.tree-row:hover {
+  background: rgba(74, 168, 255, 0.1);
+}
+.tree-row.selected {
+  background: rgba(74, 168, 255, 0.22);
+  outline: 1px solid var(--accent);
+}
+.tree-row.dimmed {
+  opacity: 0.4;
+}
+.tree-toggle {
+  width: 16px;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 10px;
+  flex-shrink: 0;
+}
+.tree-name {
+  flex: 1;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tree-cat {
+  font-size: 10px;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+.tree-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.tree-icon-btn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+.tree-icon-btn:hover {
+  color: var(--accent);
+  background: rgba(74, 168, 255, 0.15);
+}
+.tree-children {
+  margin-left: 16px;
+}
+
+/* ---------- 数据面板 ---------- */
+.data-root {
+  flex: 1.2;
+  overflow-y: auto;
+  padding: 10px 14px;
+}
+.data-group {
+  margin-bottom: 12px;
+}
+.data-group-title {
+  font-size: 12px;
+  color: var(--accent);
+  margin-bottom: 6px;
+  border-left: 3px solid var(--accent);
+  padding-left: 6px;
+}
+.data-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 3px 0;
+  font-size: 12.5px;
+}
+.data-label {
+  color: var(--text-dim);
+}
+.data-value {
+  font-family: var(--font-mono);
+  color: var(--text-main);
+}
+.data-value.warn {
+  color: var(--accent-warm);
+}
+.data-value.ok {
+  color: var(--ok);
+}
+.log-root {
+  flex: 1;
+  min-height: 120px;
+  overflow-y: auto;
+  padding: 6px 10px;
+  background: var(--bg-input);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.7;
+}
+.log-line {
+  display: flex;
+  gap: 6px;
+}
+.log-time {
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+.log-level-INFO {
+  color: var(--ok);
+}
+.log-level-WARN {
+  color: var(--accent-warm);
+}
+.log-level-ERROR {
+  color: var(--danger);
+}
+.log-msg {
+  color: var(--text-main);
+  word-break: break-all;
+}
+.data-actions {
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+/* ---------- 底部状态栏 ---------- */
+.status-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 28px;
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 0 18px;
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+
+/* ---------- 科普信息弹窗 ---------- */
+.info-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.info-modal-mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 8, 12, 0.62);
+}
+.info-modal-box {
+  position: relative;
+  width: min(680px, 92vw);
+  max-height: 84vh;
+  overflow-y: auto;
+  background: var(--bg-panel-solid);
+  border: 1px solid var(--border-active);
+  border-radius: 12px;
+  padding: 26px 30px;
+  box-shadow: var(--shadow);
+}
+.info-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-main);
+  cursor: pointer;
+  font-size: 14px;
+}
+.info-close:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+.info-modal-box h2 {
+  margin-bottom: 10px;
+  color: var(--accent);
+}
+.info-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.info-tags .tag {
+  font-size: 11px;
+  padding: 2px 9px;
+  border-radius: 10px;
+  background: rgba(74, 168, 255, 0.14);
+  border: 1px solid var(--border-active);
+  color: #9fd0ff;
+}
+.info-modal-box section {
+  margin-bottom: 16px;
+}
+.info-modal-box h3 {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.info-modal-box p,
+.info-modal-box li {
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--text-main);
+}
+.info-modal-box ul {
+  padding-left: 20px;
+}
+.info-params {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px 16px;
+}
+.info-params .param-row {
+  display: flex;
+  justify-content: space-between;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 12.5px;
+}
+
+/* ---------- lil-gui 主题微调（自动收起时的占位） ---------- */
+.lil-gui {
+  --background-color: rgba(22, 28, 38, 0.94);
+  --widget-color: #0f151e;
+  --hover-color: #243044;
+  --focus-color: #2d3c54;
+  --number-color: #7dd0ff;
+  --string-color: #cfe6ff;
+  --font-size: 12px;
+  --input-font-size: 12px;
+  top: 60px !important;
+  right: 338px !important;
+  max-height: calc(100vh - 110px);
+  overflow-y: auto;
+}
+
+/* ---------- 滚动条 ---------- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #2d3a4e;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3d5170;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------- 响应式：窄屏自动收窄侧栏 ---------- */
+@media (max-width: 1100px) {
+  .right-panel {
+    width: 270px;
+  }
+  .lil-gui {
+    right: 296px !important;
+  }
+}
+@media (max-width: 900px) {
+  .side-panel {
+    width: 240px;
+  }
+  .toolbar-title {
+    display: none;
+  }
+}

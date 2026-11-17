@@ -1,25 +1,33 @@
-# ---- OS ----
-Thumbs.db
-Desktop.ini
-.DS_Store
-
-# ---- Python ----
-__pycache__/
-*.py[cod]
-*.egg-info/
-.venv/
-venv/
-.pytest_cache/
-
-# ---- Node ----
+# 依赖
 node_modules/
+# 构建产物
 dist/
-
-# ---- IDE / 编辑器 ----
+dist-ssr/
+# 本地环境变量
+.env
+.env.local
+.env.*.local
+# 编辑器
+.vscode/*
+!.vscode/extensions.json
 .idea/
-.vscode/
-*.swp
-
-# ---- 日志与临时文件 ----
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+# 系统文件
+.DS_Store
+Thumbs.db
+# 日志
 *.log
-*.tmp
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+# 本地大型模型资源（远程加载，不入库；如需本地调试可放到 public/models 并取消注释）
+# public/models/*.glb
+# public/models/*.gltf
+# public/hdr/*.hdr
+# 无头浏览器冒烟测试临时目录
+.tmp-smoke/
+chrome-profile/

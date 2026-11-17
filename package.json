@@ -1,0 +1,36 @@
+{
+  "name": "coffee-cup-mech-sim",
+  "version": "1.0.0",
+  "private": true,
+  "description": "基于 Three.js + Vite 的旋转咖啡杯机械仿真科普项目（机械教学用，非简单循环动画）",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "docs:serve": "vite docs --outDir docs"
+  },
+  "keywords": [
+    "three.js",
+    "vite",
+    "机械仿真",
+    "旋转咖啡杯",
+    "科普",
+    "GLTF",
+    "postprocessing"
+  ],
+  "author": "机械教学仿真项目组",
+  "license": "MIT",
+  "dependencies": {
+    "cannon-es": "^0.20.0",
+    "lil-gui": "^0.19.2",
+    "postprocessing": "^6.36.4",
+    "three": "^0.169.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
